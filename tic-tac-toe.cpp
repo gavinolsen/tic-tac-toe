@@ -20,8 +20,7 @@ bool write(     const char board[][size], const char* fileName);
 void display(   const char board[][size]);
 bool didWin(    const char board[][size], char turn);
 bool diagonal(  const char board[][size], char turn);
-bool horizontal(const char board[][size], char turn);
-bool vertical(  const char board[][size], char turn);
+bool straightMatch(const char board[][size], char turn);
 
 
 
@@ -163,10 +162,9 @@ void display(const char board[][size])
  *******************************************/
 bool didWin(const char board[][size], char turn)
 {
-   return diagonal(board, turn);
+   return diagonal(board, turn) || straightMatch(board, turn); //|| horizontal(board, turn) || vertical(board, turn);
+   //return diagonal(board, turn) || horizontal(board, turn) || vertical(board, turn);
 }
-
-
 
 /*
  *
@@ -191,6 +189,7 @@ bool diagonal(const char board[][size], char turn)
          return false;
       
       /*///////////////
+       * how i derived my logic above
       if (!(board[i][i] == turn && board[j][j] == turn))
          didWin = false;
 
@@ -209,20 +208,31 @@ bool diagonal(const char board[][size], char turn)
    return true;
 }
 
-/*
- *
- *
- * */
-bool horizontal(const char board[][size], char turn)
-{
-   return false;
-}
 
 /*
  *
  *
  * */
-bool vertical(const char board[][size], char turn)
+bool straightMatch(const char board[][size], char turn)
 {
+   int horCounter = 0;
+   int verCounter = 0;
+   for (int i = 0; i < size; i++)
+   {
+      for (int j = 0; j < size; j++)
+      {
+         if (board[j][i] == turn)
+            verCounter++;
+
+         if (board[i][j] == turn)
+            horCounter++;
+      }
+
+      if (verCounter == size || horCounter == size)
+         return true;
+      
+      verCounter = 0; 
+      horCounter = 0; 
+   }
    return false;
 }
