@@ -16,9 +16,12 @@ using namespace std;
 #define blank '.'
 
 bool read(         char board[][size], const char* fileName);
-bool write(  const char board[][size], const char* fileName);
-void display(const char board[][size]);
-bool didWin( const char board[][size], char turn);
+bool write(     const char board[][size], const char* fileName);
+void display(   const char board[][size]);
+bool didWin(    const char board[][size], char turn);
+bool diagonal(  const char board[][size], char turn);
+bool horizontal(const char board[][size], char turn);
+bool vertical(  const char board[][size], char turn);
 
 
 
@@ -159,6 +162,67 @@ void display(const char board[][size])
  * variable) win the game?
  *******************************************/
 bool didWin(const char board[][size], char turn)
+{
+   return diagonal(board, turn);
+}
+
+
+
+/*
+ *
+ *
+ * */
+bool diagonal(const char board[][size], char turn)
+{
+
+   bool didWin = true;
+   
+   // check all corners and move in until we are all done
+   for (int i = 0, j = size - 1; i < size - 1; i++, j--)
+   {
+
+      //check if it's the middle and it's odd, there will only be one space in the middle
+      //it must be equal, or we will return false
+      if (i == (size + 1) / 2 - 1 && size % 2 != 0)
+         return board[i][i] == turn;
+
+
+      if (!(board[i][i] == turn && board[j][j] == turn) && !(board[j][i] == turn && board[i][j] == turn))
+         return false;
+      
+      /*///////////////
+      if (!(board[i][i] == turn && board[j][j] == turn))
+         didWin = false;
+
+      // we should also check if the first check was successful!
+      if (!didWin && !(board[j][i] == turn && board[i][j] == turn))
+         didWin = false;
+      else
+         didWin = true;
+
+      // if false, return right away
+      if (!didWin)
+         return didWin;
+
+      */////////////////
+   }
+   return true;
+}
+
+/*
+ *
+ *
+ * */
+bool horizontal(const char board[][size], char turn)
+{
+   return false;
+}
+
+/*
+ *
+ *
+ * */
+bool vertical(const char board[][size], char turn)
 {
    return false;
 }
