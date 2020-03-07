@@ -10,17 +10,24 @@
 #include <cassert>
 using namespace std;
 
-bool read(         char board[][3], const char* fileName);
-bool write(  const char board[][3], const char* fileName);
-void display(const char board[][3]);
-bool didWin( const char board[][3], char turn);
+#define size 3
+#define player1 'X'
+#define player2 'O'
+#define blank '.'
+
+bool read(         char board[][size], const char* fileName);
+bool write(  const char board[][size], const char* fileName);
+void display(const char board[][size]);
+bool didWin( const char board[][size], char turn);
+
+
 
 /**********************************************************************
  * Keeps the data and calles the read/display/write functions
  ***********************************************************************/
 int main()
 {
-   char board[3][3];
+   char board[size][size];
 
    // read the board
    char fileName[256];
@@ -36,13 +43,13 @@ int main()
    display(board);
 
    // write the board to a file
-   cout << "Enter destination filename: ";
-   cin  >> fileName;
-   if (!write(board, fileName))
-   {
-      cout << "ERROR: Unable to open file \"" << fileName << "\"\n";
-      return 1;
-   }
+   //cout << "Enter destination filename: ";
+   //cin  >> fileName;
+   //if (!write(board, fileName))
+   //{
+   //   cout << "ERROR: Unable to open file \"" << fileName << "\"\n";
+   //   return 1;
+  // }
 
    return 0;
 }
@@ -51,7 +58,7 @@ int main()
  * READ
  * Read the board from the specified filename
  *************************************************************/
-bool read(char board[][3], const char* fileName)
+bool read(char board[][size], const char* fileName)
 {
    assert(*fileName);
 
@@ -61,14 +68,14 @@ bool read(char board[][3], const char* fileName)
       return false;
 
    // read 9 symbols, hopefully they are . X O
-   for (int r = 0; r < 3; r++)
-      for (int c = 0; c < 3; c++)
+   for (int r = 0; r < size; r++)
+      for (int c = 0; c < size; c++)
       {
          fin >> board[r][c];
          assert(!fin.fail());
-         assert(board[r][c] == 'X' ||
-                board[r][c] == 'O' ||
-                board[r][c] == '.');
+         assert(board[r][c] == player1 ||
+                board[r][c] == player2 ||
+                board[r][c] == blank);
       }
 
    // close the file
@@ -80,7 +87,7 @@ bool read(char board[][3], const char* fileName)
  * WRITE
  * Write to fileName the board data
  *********************************************************/
-bool write(const char board[][3], const char* fileName)
+bool write(const char board[][size], const char* fileName)
 {
    assert(fileName[0] != '\0');
 
@@ -90,9 +97,9 @@ bool write(const char board[][3], const char* fileName)
       return false;
 
    // write my 9 symbols
-   for (int r = 0; r < 3; r++)
-      for (int c = 0; c < 3; c++)
-         fout << board[r][c] << (c == 2 ? '\n' : ' ');
+   for (int r = 0; r < size; r++)
+      for (int c = 0; c < size; c++)
+         fout << board[r][c] << (c == size - 1 ? '\n' : ' ');
 
    // close it!
    fout.close();
@@ -104,34 +111,44 @@ bool write(const char board[][3], const char* fileName)
  * DISPLAY
  * Display the contents the the screen
  *****************************************************/
-void display(const char board[][3])
+void display(const char board[][size])
 {
+
+   //determine line spaceing
+   string line;
+   for (int i = 0; i < size - 1; i++)
+   {
+      line += "---+";
+   }
+
+   line += "---\n";
+
    // loop through each row
-   for (int r = 0; r < 3; r++)
+   for (int r = 0; r < size; r++)
    {
       // only the first row is not preceeded with the --+-- magic
       if (r != 0)
-         cout << "---+---+---\n";
+         cout << line;
 
       // now, on each row, do the column stuff
-      for (int c = 0; c < 3; c++)
+      for (int c = 0; c < size; c++)
       {
          // display a space for the dot
-         if (board[r][c] == '.')
+         if (board[r][c] == blank)
             cout << "   ";
          else
             cout << " " << board[r][c] << " ";
 
          // end with a | or a newline
-         cout << (c == 2 ? '\n' : '|');
+         cout << (c == size - 1? '\n' : '|');
       }
    }
 
    // display who won
-   if (didWin(board, 'X'))
-      cout << "X won!\n";
-   if (didWin(board, 'O'))
-      cout << "O won!\n";
+   if (didWin(board, player1))
+      cout << player1 << " won!\n";
+   if (didWin(board, player2))
+      cout << player2 << " won!\n";
    
    return;
 }
@@ -141,7 +158,7 @@ void display(const char board[][3])
  * Did a given player (determined by the "turn"
  * variable) win the game?
  *******************************************/
-bool didWin(const char board[][3], char turn)
+bool didWin(const char board[][size], char turn)
 {
    return false;
 }
